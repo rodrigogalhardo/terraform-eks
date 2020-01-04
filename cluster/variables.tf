@@ -3,6 +3,6 @@
 #
 
 variable "cluster-name" {
-  default = "terraform-eks"
+  default = "SRVAWSEKSCl01"
   type    = "string"
 }

@@ -1,11 +1,11 @@
-resource "kubernetes_namespace" "example" {
+resource "kubernetes_namespace" "batpay-eks" {
   metadata {
     name = "${var.namespace_name}"
     labels {
-      name = "example-label"
+      name = "batpay-eks-label"
     }
     annotations {
-      name = "example-annotation"
+      name = "batpay-eks-annotation"
     }
   }
 }

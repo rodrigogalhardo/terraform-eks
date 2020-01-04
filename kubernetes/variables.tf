@@ -1,10 +1,10 @@
 variable "namespace_name" {
-  default = "demo-service"
+  default = "batpay-eks-service"
   type    = "string"
 }
 
 variable "nginx_pod_name" {
-  default = "demo-service"
+  default = "batpay-eks-service"
   type    = "string"
 }
 

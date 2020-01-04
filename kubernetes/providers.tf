@@ -6,7 +6,7 @@ data "external" "aws_iam_authenticator" {
   program = ["bash", "${path.module}/authenticator.sh"]
 
   query {
-    cluster_name = "terraform-eks"
+    cluster_name = "SRVAWSEKSCl01"
   }
 }
 
