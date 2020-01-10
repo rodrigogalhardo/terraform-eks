@@ -5,8 +5,8 @@
 #  * EKS Cluster
 #
 
-resource "aws_iam_role" "batpay-cluster" {
-  name = "terraform-eks-batpay-cluster"
+resource "aws_iam_role" "cardpay-cluster" {
+  name = "eks-cardpay-cluster-role"
 
   assume_role_policy = <<POLICY
 {
@@ -24,20 +24,20 @@ resource "aws_iam_role" "batpay-cluster" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "batpay-cluster-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "cardpay-cluster-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = "${aws_iam_role.batpay-cluster.name}"
+  role       = "${aws_iam_role.cardpay-cluster.name}"
 }
 
-resource "aws_iam_role_policy_attachment" "batpay-cluster-AmazonEKSServicePolicy" {
+resource "aws_iam_role_policy_attachment" "cardpay-cluster-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = "${aws_iam_role.batpay-cluster.name}"
+  role       = "${aws_iam_role.cardpay-cluster.name}"
 }
 
-resource "aws_security_group" "batpay-cluster" {
-  name        = "terraform-eks-batpay-cluster"
+resource "aws_security_group" "cardpay-cluster" {
+  name        = "eks-cardpay-cluster-sg"
   description = "Cluster communication with worker nodes"
-  vpc_id      = "${aws_vpc.batpay.id}"
+  vpc_id      = "${aws_vpc.cardpay.id}"
 
   egress {
     from_port   = 0
@@ -47,41 +47,41 @@ resource "aws_security_group" "batpay-cluster" {
   }
 
   tags {
-    Name = "terraform-eks-batpay"
+    Name = "eks-cardpay"
   }
 }
 
-resource "aws_security_group_rule" "batpay-cluster-ingress-node-https" {
+resource "aws_security_group_rule" "cardpay-cluster-ingress-node-https" {
   description              = "Allow pods to communicate with the cluster API Server"
   from_port                = 443
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.batpay-cluster.id}"
-  source_security_group_id = "${aws_security_group.batpay-node.id}"
+  security_group_id        = "${aws_security_group.cardpay-cluster.id}"
+  source_security_group_id = "${aws_security_group.cardpay-node.id}"
   to_port                  = 443
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "batpay-cluster-ingress-workstation-https" {
+resource "aws_security_group_rule" "cardpay-cluster-ingress-workstation-https" {
   cidr_blocks       = ["${local.workstation-external-cidr}"]
   description       = "Allow workstation to communicate with the cluster API Server"
   from_port         = 443
   protocol          = "tcp"
-  security_group_id = "${aws_security_group.batpay-cluster.id}"
+  security_group_id = "${aws_security_group.cardpay-cluster.id}"
   to_port           = 443
   type              = "ingress"
 }
 
-resource "aws_eks_cluster" "batpay" {
+resource "aws_eks_cluster" "cardpay" {
   name     = "${var.cluster-name}"
-  role_arn = "${aws_iam_role.batpay-cluster.arn}"
+  role_arn = "${aws_iam_role.cardpay-cluster.arn}"
 
   vpc_config {
-    security_group_ids = ["${aws_security_group.batpay-cluster.id}"]
-    subnet_ids         = ["${aws_subnet.batpay.*.id}"]
+    security_group_ids = ["${aws_security_group.cardpay-cluster.id}"]
+    subnet_ids         = ["${aws_subnet.cardpay.*.id}"]
   }
 
   depends_on = [
-    "aws_iam_role_policy_attachment.batpay-cluster-AmazonEKSClusterPolicy",
-    "aws_iam_role_policy_attachment.batpay-cluster-AmazonEKSServicePolicy",
+    "aws_iam_role_policy_attachment.cardpay-cluster-AmazonEKSClusterPolicy",
+    "aws_iam_role_policy_attachment.cardpay-cluster-AmazonEKSServicePolicy",
   ]
 }

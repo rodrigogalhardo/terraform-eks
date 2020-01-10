@@ -13,7 +13,7 @@ metadata:
   namespace: kube-system
 data:
   mapRoles: |
-    - rolearn: ${aws_iam_role.batpay-node.arn}
+    - rolearn: ${aws_iam_role.cardpay-node.arn}
       username: system:node:{{EC2PrivateDNSName}}
       groups:
         - system:bootstrappers
@@ -26,8 +26,8 @@ CONFIGMAPAWSAUTH
 apiVersion: v1
 clusters:
 - cluster:
-    server: ${aws_eks_cluster.batpay.endpoint}
-    certificate-authority-data: ${aws_eks_cluster.batpay.certificate_authority.0.data}
+    server: ${aws_eks_cluster.cardpay.endpoint}
+    certificate-authority-data: ${aws_eks_cluster.cardpay.certificate_authority.0.data}
   name: kubernetes
 contexts:
 - context:
